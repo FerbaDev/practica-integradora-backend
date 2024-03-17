@@ -1,122 +1,96 @@
-const fs = require("fs").promises;
-const productManager = require("../app");
+const ProductModel = require("../models/product.model.js")
 
 class ProductManager {
-  constructor() {
-    this.products = [];
-    this.path = "./src/models/productos.json";
-  }
+
 
   //Métodos:
 
   async addProduct(newObject) {
-    let { title, description, price, thumbnail, code, stock } = newObject;
-    //generamos id
-    let id = uuidv4();
-    let products = await this.readFile();
-
-    //verificaciones
-
-    if (!title || !description || !price || !thumbnail || !code || !stock) {
-      console.log("Todos los campos son obligatorios");
-      return;
+    try {
+      
+      let { title, description, price, thumbnail, code, stock } = newObject;  
+      
+      //verificaciones
+      
+      if (!title || !description || !price || !thumbnail || !code || !stock) {
+        console.log("Todos los campos son obligatorios");
+        return;
+      }
+      
+      const productExist = await ProductModel.findOne({code: code})
+      if (productExist) {
+        console.log("El codigo debe ser unico");
+        return;
+      }
+      
+      //generar producto
+      const newProduct = {
+        title,
+        description,
+        price,
+        thumbnail,
+        code,
+        stock,
+        status: true
+      };
+      
+      await newProduct.save()
+    } catch (error) {
+      console.log("error al cargar producto", error);
+      throw error;
     }
-
-    if (this.products.some((item) => item.code === code)) {
-      console.log("El codigo debe ser unico");
-      return;
-    }
-
-    //generar producto
-    const newProduct = {
-      id,
-      title,
-      description,
-      price,
-      thumbnail,
-      code,
-      stock,
-    };
-    //pusheamos el nuevo producto
-    products.push(newProduct);
-
-    //Guardamos el array en el archivo:
-
-    await this.saveFile(products);
   }
 
   //get products
   async getProducts() {
     try {
-      const arrayProductos = this.readFile();
-      return arrayProductos;
+      const products = await ProductModel.find();
+      return products;
     } catch (error) {
-      console.log("Error al leer el archivo", error);
+      console.log("Error al recuperar producto", error);
     }
   }
 
   //get product by id
   async getProductById(id) {
     try {
-      const arrayProductos = await this.readFile();
-      //VER SI EL ESTRICTAMENTE IGUAL FUNCIONA
-      const prodFinded = arrayProductos.find((item) => item.id == id);
-
-      if (!prodFinded) {
+      const product = await ProductModel.findById(id)
+      if (!product) {
         console.log("Producto no encontrado");
+        return null;
       } else {
         console.log("Producto encontrado! ");
-        return prodFinded;
+        return product;
       }
     } catch (error) {
       console.log("Error al leer el archivo ", error);
     }
   }
-  //LEER PRODUCTO
-  async readFile() {
-    try {
-      const respuesta = await fs.readFile(this.path, "utf-8");
-      const arrayProductos = JSON.parse(respuesta);
-      return arrayProductos;
-    } catch (error) {
-      console.log("Eerror al leer un archivo", error);
-    }
-  }
-  //GUARDAR PRODUCTO
-  async saveFile(arrayProductos) {
-    try {
-      await fs.writeFile(this.path, JSON.stringify(arrayProductos, null, 2));
-    } catch (error) {
-      console.log("Error al guardar el archivo", error);
-    }
-  }
+
   //actualizar producto
   async updateProduct(id, productoActualizado) {
     try {
-      const arrayProductos = await this.readFile();
-
-      const index = arrayProductos.findIndex((item) => item.id === id);
-
-      if (index !== -1) {
-        //Puedo usar el método de array splice para reemplazar el objeto en la posicion del index:
-        arrayProductos[index] = {...arrayProductos[index], ...productoActualizado}
-        await this.saveFile(arrayProductos);
-        console.log("Producto actualizado");
-      } else {
-        console.log("no se encontró el producto");
+      const updateProduct = await ProductModel.findByIdAndUpdate(id, productoActualizado);
+      if (!updateProduct) {
+        console.log("Producto no encontrado");
+        return null;
       }
+      console.log("Producto actualizado correctamente");
+      return updateProduct
     } catch (error) {
       console.log("Error al actualizar el producto", error);
     }
   }
-  async deleteProduct() {
-    let products = this.getProducts();
-    const index = arrayProductos.findIndex((item) => item.id === id);
-    if (index !== -1) {
-      products.splice(index, 1);
-      await this.saveFile(products);
-    } else {
-      console.log("Producto no encontrado para eliminar");
+  async deleteProduct(id) {
+    try {
+      const deleteProduct = await ProductModel.findByIdAndDelete(id);
+      if (!deleteProduct) {
+        console.log("Producto no encontrado");
+        return null;
+      }
+      console.log("Producto eliminado correctamente");
+    } catch (error) {
+      console.log("Error al eliminar el producto", error);
     }
   }
 }
