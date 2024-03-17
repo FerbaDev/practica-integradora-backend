@@ -8,11 +8,11 @@ class ProductManager {
   async addProduct(newObject) {
     try {
       
-      let { title, description, price, thumbnail, code, stock } = newObject;  
+      let { title, description, price, thumbnail, code, category, stock } = newObject;  
       
       //verificaciones
       
-      if (!title || !description || !price || !thumbnail || !code || !stock) {
+      if (!title || !description || !price || !thumbnail || !code || !category || !stock) {
         console.log("Todos los campos son obligatorios");
         return;
       }
@@ -24,15 +24,16 @@ class ProductManager {
       }
       
       //generar producto
-      const newProduct = {
+      const newProduct = new ProductModel({
         title,
         description,
         price,
         thumbnail,
+        category,
         code,
         stock,
         status: true
-      };
+      });
       
       await newProduct.save()
     } catch (error) {
