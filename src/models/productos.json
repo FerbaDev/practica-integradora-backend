@@ -1,0 +1,29 @@
+[
+  {
+    "id": "2b82a6b3-ead0-41bf-827f-e2e5dd5331f6",
+    "title": "termo",
+    "description": "stanley",
+    "price": 30999,
+    "thumbnail": "foto de termo",
+    "code": "abc1234",
+    "stock": 99
+  },
+  {
+    "id": "5ae89c1f-cee9-4609-8d3e-ce9594beea4a",
+    "title": "celular",
+    "description": "motorola",
+    "price": 3500440,
+    "thumbnail": "foto de celular",
+    "code": "abc12544",
+    "stock": 100
+  },
+  {
+    "id": "ef0f7e7a-70dd-4b21-aedf-d2cc5f640b7b",
+    "title": "encendedor",
+    "description": "BIC",
+    "price": 3500440,
+    "thumbnail": "foto de encendedor",
+    "code": "abc125124",
+    "stock": 100
+  }
+]
