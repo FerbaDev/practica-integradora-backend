@@ -33,3 +33,7 @@ const productSchema = new mongoose.Schema({
         type: [String],
     },
 })
+
+const ProductModel = mongoose.model("products", productSchema);
+
+module.exports = ProductModel;
