@@ -1,5 +1,4 @@
 const fs = require("fs").promises;
-const { v4: uuidv4 } = require("uuid");
 const productManager = require("../app");
 
 class ProductManager {

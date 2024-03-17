@@ -1,7 +1,5 @@
 const express = require("express");
-//inicializamos express
 const app = express();
-//puerto
 const PUERTO = 8080;
 //importamos las rutas
 const productsRouter = require("./routes/products.router.js");
@@ -10,6 +8,7 @@ const cartsRouter = require("./routes/carts.router.js");
 const ProductManager = require("./controllers/productManager.js");
 //instanciamos
 const productManager = new ProductManager("./src/models/productos.json");
+require("./database.js");
 //configuramos middleware para recibir datos en formato json
 app.use(express.urlencoded({ extended: true}));
 app.use(express.json());
