@@ -4,7 +4,7 @@ const express = require("express");
 const productsRouter = express.Router();
 //traemos el product manager
 const ProductManager = require("../controllers/productManager");
-const productManager = new ProductManager("./src/models/productos.json");
+const productManager = new ProductManager();
 
 //array de productos
 
